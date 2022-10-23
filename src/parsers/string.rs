@@ -5,10 +5,10 @@ pub fn parse_string(chars: &mut Vec<char>) -> Result<Element, String> {
     let mut is_escaped = false;
     loop {
         if let Some(character) = chars.pop() {
-            if character == '"' && is_escaped == false {
+            if character == '"' && !is_escaped {
                 // End of string
                 break;
-            } else if character == '\\' && is_escaped == false {
+            } else if character == '\\' && !is_escaped {
                 // Escape character
                 is_escaped = true;
             } else {

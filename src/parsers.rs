@@ -6,18 +6,20 @@ mod object;
 mod string;
 
 use crate::element::Element;
+use crate::errors::add_error_context;
 use generic_character::parse_generic_character;
 
-pub fn parse_string(string: String) -> Result<Element, String> {
+pub fn parse_string(string: String, add_full_error_context: bool) -> Result<Element, String> {
     let mut chars: Vec<_> = string.chars().collect();
-    return parse_characters(&mut chars);
+    return parse_characters(&mut chars, add_full_error_context);
 }
 
-pub fn parse_characters(chars: &mut Vec<char>) -> Result<Element, String> {
+pub fn parse_characters(chars: &mut Vec<char>, add_full_error_context: bool) -> Result<Element, String> {
+    // Used for creating better error messages
+    let all_chars = chars.clone();
+
     // Chars need to be reversed so we can use ".pop()"
     chars.reverse();
-
-    let total_character_length = chars.len();
 
     let mut element: Result<Element, String> = Ok(Element::Empty);
     if let Some(character) = chars.pop() {
@@ -27,8 +29,7 @@ pub fn parse_characters(chars: &mut Vec<char>) -> Result<Element, String> {
     }
 
     if let Err(message) = element {
-        let char_index = total_character_length - chars.len();
-        element = Err(format!("{} (at char {})", message, char_index));
+        element = Err(add_error_context(chars, all_chars, message, add_full_error_context));
     }
 
     element
