@@ -5,7 +5,7 @@ use crate::parsers::number::parse_number;
 use crate::parsers::object::parse_object;
 use crate::parsers::string::parse_string;
 
-pub fn parse_generic_character(chars: &mut Vec<char>, character: char) -> Option<Element> {
+pub fn parse_generic_character(chars: &mut Vec<char>, character: char) -> Option<Result<Element, String>> {
     return match character {
         '"' => Some(parse_string(chars)),
         '{' => Some(parse_object(chars)),
@@ -29,6 +29,9 @@ pub fn parse_generic_character(chars: &mut Vec<char>, character: char) -> Option
             Element::Null,
         )),
         '-' | '0'..='9' => Some(parse_number(chars, character)),
-        _ => None,
+        ' ' | '\n' | '\t' => None,
+        _ => {
+            Some(Err("Invalid character".to_string()))
+        },
     };
 }

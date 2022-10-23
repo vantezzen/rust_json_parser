@@ -1,6 +1,6 @@
 use crate::element::Element;
 
-pub fn parse_string(chars: &mut Vec<char>) -> Element {
+pub fn parse_string(chars: &mut Vec<char>) -> Result<Element, String> {
     let mut contents = String::from("");
     let mut is_escaped = false;
     loop {
@@ -17,9 +17,9 @@ pub fn parse_string(chars: &mut Vec<char>) -> Element {
                 contents.push_str(&character.to_string());
             }
         } else {
-            panic!("Unexpected end");
+            return Err("Unexpected end of string".to_string());
         }
     }
 
-    Element::String(contents)
+    Ok(Element::String(contents))
 }

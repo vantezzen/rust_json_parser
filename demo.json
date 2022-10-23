@@ -8,5 +8,5 @@
     "other_boolean": false,
     "null": null
   },
-  "array": ["string", "string"]
+  "array": ["string", 123.456, { "key": "value" }, "string"]
 }

@@ -8,7 +8,7 @@ enum ObjectParseMode {
     Value,
 }
 
-pub fn parse_object(chars: &mut Vec<char>) -> Element {
+pub fn parse_object(chars: &mut Vec<char>) -> Result<Element, String> {
     let mut object_map: HashMap<String, Element> = HashMap::new();
     let mut mode = ObjectParseMode::Key;
     let mut key: Option<String> = None;
@@ -20,9 +20,9 @@ pub fn parse_object(chars: &mut Vec<char>) -> Element {
             // Switch from key to value
             ':' => {
                 if mode == ObjectParseMode::Value {
-                    panic!("Unexpected colon in value");
+                    return Err("Unexpected colon in value".to_string());
                 } else if key == None {
-                    panic!("Colon in object but no key declared");
+                    return Err("Colon in object but no key declared".to_string());
                 } else {
                     mode = ObjectParseMode::Value;
                 }
@@ -30,9 +30,9 @@ pub fn parse_object(chars: &mut Vec<char>) -> Element {
             // Switch from value to another key
             ',' => {
                 if mode == ObjectParseMode::Key {
-                    panic!("Unexpected comma in object");
+                    return Err("Unexpected comma in object".to_string());
                 } else if key != None {
-                    panic!("Unexpected comma before value declaration");
+                    return Err("Unexpected comma before value declaration".to_string());
                 } else {
                     mode = ObjectParseMode::Key;
                 }
@@ -48,22 +48,30 @@ pub fn parse_object(chars: &mut Vec<char>) -> Element {
                 let generic_element_option = parse_generic_character(chars, generic_character);
 
                 if let Some(generic_element) = generic_element_option {
-                    if mode == ObjectParseMode::Key {
-                        // Found key
-                        if let Element::String(key_string) = generic_element {
-                            key = Some(key_string);
-                        } else {
-                            panic!("Invalid object key type");
+                    
+                    match generic_element {
+                        Ok(generic_element) => {
+                            if mode == ObjectParseMode::Key {
+                                // Found key
+                                if let Element::String(key_string) = generic_element {
+                                    key = Some(key_string);
+                                } else {
+                                    return Err("Invalid object key type".to_string());
+                                }
+                            } else {
+                                // Found value for the given key
+                                object_map.insert(key.expect("No key for object value"), generic_element);
+                                key = None;
+                            }
+                        },
+                        Err(message) => {
+                            return Err(message)
                         }
-                    } else {
-                        // Found value for the given key
-                        object_map.insert(key.expect("No key for object value"), generic_element);
-                        key = None;
                     }
                 }
             }
         }
     }
 
-    Element::Object(object_map)
+    Ok(Element::Object(object_map))
 }

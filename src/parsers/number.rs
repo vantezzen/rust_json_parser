@@ -1,6 +1,6 @@
 use crate::element::Element;
 
-pub fn parse_number(chars: &mut Vec<char>, character: char) -> Element {
+pub fn parse_number(chars: &mut Vec<char>, character: char) -> Result<Element, String> {
     let mut contents = String::from(character.to_string());
     loop {
         if let Some(character) = chars.pop() {
@@ -16,5 +16,5 @@ pub fn parse_number(chars: &mut Vec<char>, character: char) -> Element {
         }
     }
 
-    Element::Number(contents)
+    Ok(Element::Number(contents))
 }
