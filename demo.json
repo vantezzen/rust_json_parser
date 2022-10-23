@@ -1,7 +1,9 @@
 {
   "contents": "string",
   "key": {
-    "some": "value\" with quotes"
+    "some": "value\" with quotes",
+    "number": 1.9234,
+    "negative": -1563.3222
   },
   "array": ["string", "string"]
 }
