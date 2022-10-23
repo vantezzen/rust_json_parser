@@ -30,8 +30,8 @@ pub fn parse_generic_character(chars: &mut Vec<char>, character: char) -> Option
         )),
         '-' | '0'..='9' => Some(parse_number(chars, character)),
         ' ' | '\n' | '\t' => None,
-        _ => {
-            Some(Err("Invalid character".to_string()))
+        character => {
+            Some(Err(format!("Invalid character '{}'", character)))
         },
     };
 }

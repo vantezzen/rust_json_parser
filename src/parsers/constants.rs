@@ -12,7 +12,7 @@ pub fn handle_suspected_constant(
             contents.push_str(&character.to_string());
 
             if contents != suspected_constant[0..contents.len()] {
-                return Err("Unknown constant".to_string());
+                return Err(format!("Unknown constant '{}', did you mean '{}'?", contents, suspected_constant));
             }
             if contents.len() == suspected_constant.len() {
                 break;

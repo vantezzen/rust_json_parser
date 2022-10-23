@@ -5,7 +5,7 @@ pub enum Element {
     String(String),
     Object(HashMap<String, Element>),
     Array(Vec<Element>),
-    Number(String),
+    Number(String), // String is used as numbers may be any format or size
     True,
     False,
     Null,
