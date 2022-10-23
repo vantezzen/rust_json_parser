@@ -4,5 +4,6 @@ use std::collections::HashMap;
 pub enum Element {
     String(String),
     Object(HashMap<String, Element>),
+    Array(Vec<Element>),
     Empty,
 }

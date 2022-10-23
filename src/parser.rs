@@ -23,6 +23,9 @@ fn parse_generic_character(chars: &mut Vec<char>, character: char) -> Option<Ele
     } else if character == '{' {
         let element = parse_object(chars);
         return Some(element);
+    } else if character == '[' {
+        let element = parse_array(chars);
+        return Some(element);
     }
     None
 }
@@ -63,20 +66,26 @@ pub fn parse_object(chars: &mut Vec<char>) -> Element {
                 }
             },
 
+            // End of object
             '}' => {
                 break;
             },
+
+            // Character that doesn't control the object structure
             generic_character => {
                 let generic_element_option = parse_generic_character(chars, generic_character);
+
                 if let Some(generic_element) = generic_element_option {
             
                     if mode == ObjectParseMode::Key {
+                        // Found key
                         if let Element::String(key_string) = generic_element {
                             key = Some(key_string);
                         } else {
                             panic!("Invalid object key type");
                         }
                     } else {
+                        // Found value for the given key
                         object_map.insert(key.expect("No key for object value"), generic_element);
                         key = None;
                     }
@@ -86,6 +95,37 @@ pub fn parse_object(chars: &mut Vec<char>) -> Element {
     }
 
     Element::Object(object_map)
+}
+
+pub fn parse_array(chars: &mut Vec<char>) -> Element {
+    let mut array_contents: Vec<Element> = Vec::new();
+
+    loop {
+        let character = chars.pop().expect("Unexpected end of object");
+
+        match character {
+            // New element
+            ',' => {
+                
+            },
+
+            // End of array
+            ']' => {
+                break;
+            },
+
+            // Character that doesn't control the object structure
+            generic_character => {
+                let generic_element_option = parse_generic_character(chars, generic_character);
+
+                if let Some(generic_element) = generic_element_option {
+                    array_contents.push(generic_element);
+                }
+            }
+        }
+    }
+
+    Element::Array(array_contents)
 }
 
 pub fn parse_string(chars: &mut Vec<char>) -> Element {

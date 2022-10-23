@@ -2,5 +2,6 @@
   "contents": "string",
   "key": {
     "some": "value\" with quotes"
-  }
+  },
+  "array": ["string", "string"]
 }
