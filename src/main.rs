@@ -1,28 +1,20 @@
-use std::env;
-use std::fs;
-
-mod parser;
-use parser::parse_item;
-
 mod element;
+mod file;
+use file::read_file_characters;
+
+mod parsers;
+use parsers::parse_characters;
+
+mod cli;
+use cli::get_file_path_from_args;
 
 fn main() {
-    println!("Hello, world!");
+    println!("Simple JSON Parser");
 
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() == 1 {
-        panic!("Usage: cargo run -- file.json");
-    }
-
-    let file_path = &args[1];
-    println!("Reading file {}", file_path);
-
-    let contents = fs::read_to_string(file_path).expect("Should have been able to read the file");
-
-    let mut chars: Vec<_> = contents.chars().collect();
+    let file_path = get_file_path_from_args();
+    let mut chars = read_file_characters(file_path);
     chars.reverse();
 
-    let contents = parse_item(&mut chars);
+    let contents = parse_characters(&mut chars);
     dbg!(contents);
 }
