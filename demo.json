@@ -3,7 +3,10 @@
   "key": {
     "some": "value\" with quotes",
     "number": 1.9234,
-    "negative": -1563.3222
+    "negative": -1563.3222,
+    "boolean": true,
+    "other_boolean": false,
+    "null": null
   },
   "array": ["string", "string"]
 }
