@@ -1,8 +1,8 @@
 use std::env;
 use std::fs;
 
-mod parsers;
-use parsers::parse_item;
+mod parser;
+use parser::parse_item;
 
 mod element;
 

@@ -1,6 +1,6 @@
 {
   "contents": "string",
   "key": {
-    "some": "value"
+    "some": "value\" with quotes"
   }
 }
