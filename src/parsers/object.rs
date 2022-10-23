@@ -1,6 +1,6 @@
+use crate::element::Element;
 use crate::parsers::generic_character::parse_generic_character;
 use std::collections::HashMap;
-use crate::element::Element;
 
 #[derive(PartialEq)]
 enum ObjectParseMode {
@@ -26,7 +26,7 @@ pub fn parse_object(chars: &mut Vec<char>) -> Element {
                 } else {
                     mode = ObjectParseMode::Value;
                 }
-            },
+            }
             // Switch from value to another key
             ',' => {
                 if mode == ObjectParseMode::Key {
@@ -36,19 +36,18 @@ pub fn parse_object(chars: &mut Vec<char>) -> Element {
                 } else {
                     mode = ObjectParseMode::Key;
                 }
-            },
+            }
 
             // End of object
             '}' => {
                 break;
-            },
+            }
 
             // Character that doesn't control the object structure
             generic_character => {
                 let generic_element_option = parse_generic_character(chars, generic_character);
 
                 if let Some(generic_element) = generic_element_option {
-            
                     if mode == ObjectParseMode::Key {
                         // Found key
                         if let Element::String(key_string) = generic_element {
